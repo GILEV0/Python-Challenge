@@ -77,7 +77,3 @@ In addition, your final script should both print the analysis to the terminal an
 * Start early, and reach out for help when you need it! Be sure to identify specific questions for your instructors and TAs so that they understand your thought process and can provide targeted guidance.
 
 * Always commit your work and back it up with pushes to GitHub or GitLab. You don't want to lose hours of your work! Also make sure that your repo has a detailed `README.md` file. 
-
-## Rubric
-
-[Unit 3 Homework Rubric](https://docs.google.com/document/d/1Q5ZnMUD12NvbElOgE3a_lcahuRZdv83aDu9VtXZRiGg/edit?usp=sharing)
