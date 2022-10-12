@@ -22,11 +22,14 @@ with open(load_file) as election_results:
     candidate_list = []
     # Dictionary to hold the votes per candidate
     candidate_votes = {}
+    # Variable to hold candidate's vote percentage
     percent_votes = []
+
+    # Set the % & win count 
+    winner_percent = 0
     candidate_winner = ""
     win_counter = 0
-    winner_percent = 0
-
+    
     # Read each row of data after the header
     for row in electiondata:
         # Add to the total vote count
@@ -42,32 +45,32 @@ with open(load_file) as election_results:
     # Start counting individual candidate votes
         candidate_votes[candidate_name] +=1
     print("Election Results") 
-
     print("-----------------")
-
     print("Total Votes: " + str(total_votes)) 
-
     print("-----------------")    
 
     # Count the votes for each candidate
     for candidate_name in candidate_votes:
-        # Retrieve the vote count of a candidate. 
+        # Add vote count for candidate. 
         votes = candidate_votes[candidate_name]
         # print(votes)
 
-        # Calculate the percentage of votes
+        # Calculate the percentage of votes. Tutor aid for float & print
         percent_votes = float(votes)/float(total_votes)*100 
         print(f"{candidate_name}: {percent_votes:.3f}% ({votes})\n")
 
+        # Win count 
         if (votes > win_counter): 
             win_counter = votes
             winner_percent = percent_votes
             candidate_winner = candidate_name
             #print(candidate_winner)
             #print(candidate_votes)
-
 print("----------------")
-
 print("Winner: " + candidate_winner)  
-
 print("----------------")
+
+# Input into terminal
+# python main.py >output.txt
+# ls
+# cat output.txt
