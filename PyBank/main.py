@@ -1,70 +1,83 @@
-#import modules
+# Import os module
 import os
+# Import csv module
 import csv
+import statistics
 
-#set path for file
-budget_data_csv = os.path.join("\\Resources\\budget_data.csv")
+# File to be loaded
+budget_file = os.path.join('.', 'Resources', 'budget_data.csv')
 
-#set the output of the text file
-text_path = "output.txt"
+# Open budget data file
+with open(budget_file) as finance_records:
+    # csv.reader with delimiter specified for csv
+    budgetdata = csv.reader(finance_records, delimiter=',')
+    # print(budgetdata) 
 
-#Set variables
-total_months = 0
-total_revenue = 0
-revenue = []
-previous_revenue = 0
-month_of_change = []
-revenue_change = 0
-greatest_decrease = ["", 9999999]
-greatest_increase = ["", 0]
-revenue_change_list = []
-revenue_average = 0
+     # Read the header of budget data file
+    header = next(budgetdata)
+    # print(header)
 
+    #Set variables
+    total_months = 0
+    net_PL = 0
+    PL_change = []
+    PL_change_list = []
+    greatest_decrease = ["", 9999999999999999999]
+    greatest_increase = ["", 0]
+    peak_month = ''
+    low_month = ''
+    per_month_change = []
 
-#open the csv file
-with open('budget_data.csv') as csvfile:  
-    csvreader = csv.DictReader(csvfile)
+    first_row = next(budgetdata)
+    total_months += 1
+    net_PL += int(first_row[1])
+    prev_net = int(first_row[1])
 
     #Loop through to find total months
-    for row in csvreader:
+    for row in budgetdata:
 
         #Count the total of months
         total_months += 1
+        # print(total_months)
 
-        #Calculate the total revenue over the entire period
-        total_revenue = total_revenue + int(row["Profit/Losses"])
+        # Calculate the Net profit/loss over the entire period
+        net_PL += int(row[1])      
+        net_change = int(row[1]) - prev_net
+        prev_net = int(row[1])
+        PL_change_list += [net_change]
+        per_month_change += [row[0]]
 
-        #Calculate the average change in revenue between months over the entire period
-        revenue_change = float(row["Profit/Losses"])- previous_revenue
-        previous_revenue = float(row["Profit/Losses"])
-        revenue_change_list = revenue_change_list + [revenue_change]
-        month_of_change = [month_of_change] + [row["Date"]]
-       
-
-        #The greatest increase in revenue (date and amount) over the entire period
-        if revenue_change>greatest_increase[1]:
-            greatest_increase[1]= revenue_change
-            greatest_increase[0] = row['Date']
+         #The greatest increase in revenue (date and amount) over the entire period
+        if net_change > greatest_increase[1]:
+            greatest_increase[0] = row[0]
+            greatest_increase[1] = net_change
 
         #The greatest decrease in revenue (date and amount) over the entire period
-        if revenue_change<greatest_decrease[1]:
-            greatest_decrease[1]= revenue_change
-            greatest_decrease[0] = row['Date']
-    revenue_average = sum(revenue_change_list)/len(revenue_change_list)
+        if net_change < greatest_decrease[1]:
+            greatest_decrease[0] = row[0]
+            greatest_decrease[1] = net_change
 
-#write changes to csv
-with open(text_path, 'w') as file:
-    file.write("Financial Analysis\n")
-    file.write("---------------------\n")
-    file.write("Total Months: %d\n" % total_months)
-    file.write("Total Revenue: $%d\n" % total_revenue)
-    file.write("Average Revenue Change $%d\n" % revenue_average)
-    file.write("Greatest Increase in Revenue: %s ($%s)\n" % (greatest_increase[0], greatest_increase[1]))
-    file.write("Greatest Decrease in Revenue: %s ($%s)\n" % (greatest_decrease[0], greatest_decrease[1]))
+        # PL_change_list.append(int(row[1]))
 
+    # Month to month change
+for i in range(len(PL_change_list)-1):
+    PL_change = (PL_change_list[i+1] - PL_change_list[i])
+    per_month_change.append(PL_change)
 
+# PL_ave = statistics.mean(per_month_change)
+PL_ave = sum(PL_change_list) / len(PL_change_list)
 
+print("Financial Analysis")
+print("----------------------")
+print("Total Months: " + str(total_months))
+print("Total: $" + str(net_PL))
+print("Average Change: $" + str(round(PL_ave, 2)))
+print("Greatest Increase in Profits: " + str(greatest_increase[0]) + "  ($" + str(greatest_increase[1]) + ")")
+print("Greatest Decrease in Profits: " + str(greatest_decrease[0]) + "  ($" + str(greatest_decrease[1]) + ")")
 
-
-
-
+# set the output of the text file
+# Input into terminal
+# python main.py >output.txt
+# ls
+# cat output.txt
+# budgetanalysispath = os.path.join("./PyBank","Analysis","output.txt")
